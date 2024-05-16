@@ -1,0 +1,10 @@
+
+
+{
+    "dbname": "dust_detection",
+    "user": "postgres",
+    "password": "admin",
+    "host": "localhost",
+    "port": "5433"
+  }
+  
