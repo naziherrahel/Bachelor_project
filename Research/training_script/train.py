@@ -10,7 +10,7 @@ pre_trained_model = YOLO(params['model_type'])
 
 # train 
 model = pre_trained_model.train(
-    data="data/data.yaml",
+    data="data.yaml",
     imgsz=params['imgsz'],
     batch=params['batch'],
     epochs=params['epochs'],
