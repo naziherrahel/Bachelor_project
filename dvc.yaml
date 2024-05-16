@@ -1,0 +1,16 @@
+stages:
+  train:
+    cmd: python Research/training_script/train.py
+    deps:
+    - data/
+    - Research/training_script/train.py
+    - real_time_detection/utils.py
+    - Research/params.yaml
+    outs:
+    - models/best.pt
+    - reports/train_params.yaml:
+        cache: false
+    metrics:
+    - reports/train_metrics.csv:
+        cache: false
+
