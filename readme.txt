@@ -1,3 +1,5 @@
+
+To test this prototype system you should change the model paths as well as the database credentials :)
 Чтобы протестировать эту систему-прототип, вам следует изменить пути к модели, а также учетные данные базы данных :)
 
 
