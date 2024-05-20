@@ -1,0 +1,6 @@
+outs:
+- md5: 800b84dd58f1b670b99ea05681c53863.dir
+  size: 561078826
+  nfiles: 2035
+  hash: md5
+  path: augm_data
