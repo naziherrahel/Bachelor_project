@@ -3,18 +3,24 @@ import yaml
 import mlflow
 import mlflow.pytorch
 from ultralytics import YOLO
+from getpass import getpass
 
-# Set environment variables for DagsHub authentication
-os.environ['MLFLOW_TRACKING_USERNAME'] = 'naziherrahel'
-os.environ['MLFLOW_TRACKING_PASSWORD'] = '1b3e29ef364e14df28b5fa068b368eface00a055'
+# # Set environment variables for DagsHub authentication
+# os.environ['MLFLOW_TRACKING_USERNAME'] = 'naziherrahel'
+# os.environ['MLFLOW_TRACKING_PASSWORD'] = '1b3e29ef364e14df28b5fa068b368eface00a055'
 
-# Set MLflow tracking URI
-mlflow.set_tracking_uri("https://dagshub.com/naziherrahel/Bachelor_project.mlflow")
+# Set up DagsHub environment variables
+os.environ['MLFLOW_TRACKING_USERNAME'] = input('Enter your DagsHub username: ')
+os.environ['MLFLOW_TRACKING_PASSWORD'] = getpass('Enter your DagsHub access token: ')
+os.environ['MLFLOW_TRACKING_PROJECTNAME'] = input('Enter your DagsHub project name: ')
 
 # Debugging: Print environment variables and tracking URI
 print("MLFLOW_TRACKING_URI:", mlflow.get_tracking_uri())
 print("MLFLOW_TRACKING_USERNAME:", os.getenv('MLFLOW_TRACKING_USERNAME'))
 print("MLFLOW_TRACKING_PASSWORD:", os.getenv('MLFLOW_TRACKING_PASSWORD'))
+
+
+mlflow.set_tracking_uri(f'https://dagshub.com/{os.environ["MLFLOW_TRACKING_USERNAME"]}/{os.environ["MLFLOW_TRACKING_PROJECTNAME"]}.mlflow')
 
 # Load parameters from params.yaml
 with open(r"Research/params.yaml") as f:
