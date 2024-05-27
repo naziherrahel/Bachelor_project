@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python preprocessing/preprocess_data.py
+    deps:
+    - path: preprocessing/preprocess_data.py
+      hash: md5
+      md5: 6caf0516a84657cda24cb6f14e109ea8
+      size: 993
+    - path: real_time_detection/camera_config.json
+      hash: md5
+      md5: 2f791db0c9c3aa9a5484323618cf2002
+      size: 243
+    outs:
+    - path: preprocessed_data/
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
