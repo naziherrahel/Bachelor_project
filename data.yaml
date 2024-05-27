@@ -1,4 +1,4 @@
-path: 'C:/Users/Администратор/Desktop/dust_detection_project/data'
+path: './data'
 train: 'train/images'  #relative to path 
 # test: 'test/images'     
 val: 'valid/images'  

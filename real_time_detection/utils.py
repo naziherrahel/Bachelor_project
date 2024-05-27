@@ -28,20 +28,6 @@ def is_dust_cloud(size_changes, track):
 
 
 
-
-def is_visibility_obscured(frame, blur_threshold=100.0):
-    # Convert to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    # Compute the Laplacian of the image and then the variance
-    variance_of_laplacian = cv2.Laplacian(gray, cv2.CV_64F).var()
-
-    # If the variance is below a threshold, the image is considered blurry
-    return variance_of_laplacian < blur_threshold
-
-
-
-
 def play_sound(file_path):
     # Open the sound file
     with wave.open(file_path, 'rb') as wf:

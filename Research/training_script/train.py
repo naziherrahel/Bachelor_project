@@ -4,10 +4,9 @@ import mlflow
 import mlflow.pytorch
 from ultralytics import YOLO
 from getpass import getpass
+import dagshub
 
-# # Set environment variables for DagsHub authentication
-# os.environ['MLFLOW_TRACKING_USERNAME'] = 'naziherrahel'
-# os.environ['MLFLOW_TRACKING_PASSWORD'] = '1b3e29ef364e14df28b5fa068b368eface00a055'
+dagshub.init('Bachelor_project', 'naziherrahel', mlflow= True)
 
 # Set up DagsHub environment variables
 os.environ['MLFLOW_TRACKING_USERNAME'] = input('Enter your DagsHub username: ')

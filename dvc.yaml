@@ -2,7 +2,7 @@ stages:
   train:
     cmd: python Research/training_script/train.py
     deps:
-    - data/
+    - data/preprocessed
     - Research/training_script/train.py
     - real_time_detection/utils.py
     - Research/params.yaml
@@ -14,3 +14,10 @@ stages:
     - reports/train_metrics.csv:
         cache: false
 
+  deploy:
+    cmd: python models/deploy_model.py
+    deps:
+    - models/best.pt
+    - models/deploy_model.py
+    outs:
+    - models/deployed_model.pt

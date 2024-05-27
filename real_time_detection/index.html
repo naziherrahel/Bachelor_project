@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Dust Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 font-roboto">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-6">
+            <nav class="flex justify-between items-center py-4">
+                <h1 class="text-4xl font-bold text-blue-600">Real-Time Dust Detection</h1>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
+                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">About</a></li>
+                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h2 class="text-2xl font-semibold mb-2">Stream 1</h2>
+                <div class="border border-gray-300 rounded-lg overflow-hidden">
+                    <img id="video-stream-1" src="" alt="Video Stream 1" class="w-full h-auto"/>
+                </div>
+                <div id="stream-1-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
+                    No alerts
+                </div>
+                <audio id="audio-alert-1" class="hidden"></audio>
+            </div>
+            <div>
+                <h2 class="text-2xl font-semibold mb-2">Stream 2</h2>
+                <div class="border border-gray-300 rounded-lg overflow-hidden">
+                    <img id="video-stream-2" src="" alt="Video Stream 2" class="w-full h-auto"/>
+                </div>
+                <div id="stream-2-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
+                    No alerts
+                </div>
+                <audio id="audio-alert-2" class="hidden"></audio>
+            </div>
+        </main>
+        <footer class="mt-8 text-center text-gray-500">
+            &copy; 2024 Real-Time Dust Detection. All rights reserved.
+        </footer>
+    </div>
+    <script>
+        const videoStream1 = document.getElementById('video-stream-1');
+        const videoStream2 = document.getElementById('video-stream-2');
+        const stream1Alerts = document.getElementById('stream-1-alerts');
+        const stream2Alerts = document.getElementById('stream-2-alerts');
+        const audioAlert1 = document.getElementById('audio-alert-1');
+        const audioAlert2 = document.getElementById('audio-alert-2');
+
+        const ws1 = new WebSocket('ws://127.0.0.1:8000/ws?stream=1');
+        const ws2 = new WebSocket('ws://127.0.0.1:8000/ws?stream=2');
+
+        ws1.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            if (message.type === "frame") {
+                videoStream1.src = 'data:image/jpeg;base64,' + message.data;
+                stream1Alerts.textContent = "Dust detected!";
+            } else if (message.type === "audio") {
+                audioAlert1.src = 'data:audio/wav;base64,' + message.data;
+                audioAlert1.play();
+            }
+        };
+
+        ws2.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            if (message.type === "frame") {
+                videoStream2.src = 'data:image/jpeg;base64,' + message.data;
+                stream2Alerts.textContent = "Dust detected!";
+            } else if (message.type === "audio") {
+                audioAlert2.src = 'data:audio/wav;base64,' + message.data;
+                audioAlert2.play();
+            }
+        };
+    </script>
+</body>
+</html>
