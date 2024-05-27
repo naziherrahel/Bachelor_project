@@ -5,31 +5,31 @@ stages:
       - real_time_detection/camera_config.json
       - preprocessing/preprocess_data.py
     outs:
-      - preprocessed_data/  # Adjusted to avoid overlap with 'data'
+      - preprocessed_data/  # Output directory for preprocessed data
 
   train:
     cmd: python Research/training_script/train.py
     deps:
-      - data/  # Ensures it uses a specific sub-directory of data
+      - data/  # Ensures it uses the data directory
       - preprocessed_data/  # Uses the output of the preprocess stage
       - Research/training_script/train.py
       - real_time_detection/utils.py
       - Research/params.yaml
     outs:
-      - models/best.pt
-      - reports/train_params.yaml:
+      - models/best.pt  # Best model output
+      - reports/train_params.yaml:  # Training parameters output
           cache: false
     metrics:
-      - reports/train_metrics.csv:
+      - reports/train_metrics.csv:  # Training metrics output
           cache: false
 
   deploy:
-    cmd: python models/deploy_model.py
+    cmd: python deployment/deploy_model.py
     deps:
       - models/best.pt
-      - models/deploy_model.py
+      - deployment/deploy_model.py
     outs:
-      - models/deployed_model.pt
+      - models/deployed_model.pt  # Deployed model output
 
   inference:
     cmd: python real_time_detection/inference.py
@@ -38,4 +38,4 @@ stages:
       - real_time_detection/camera_config.json
       - real_time_detection/inference.py
     outs:
-      - saved_frames/
+      - saved_frames/  # Directory for saved frames
