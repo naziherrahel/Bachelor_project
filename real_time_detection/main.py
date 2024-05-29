@@ -63,17 +63,16 @@ from fastapi.responses import HTMLResponse
 # if __name__ == "__main__":
 #     import uvicorn
 #     uvicorn.run(app, host="127.0.0.1", port=8000)
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
 import logging
 import json
 from inference import process_camera_stream
-from websocket_utils import add_websocket, remove_websocket
+from websocket_utils import add_websocket, remove_websocket, send_frame_to_websockets
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
-security = HTTPBasic()
 
 # Load camera URLs from JSON configuration
 with open('real_time_detection/camera_config.json', 'r') as file:
@@ -88,16 +87,8 @@ logging.basicConfig(level=logging.INFO)
 class StreamRequest(BaseModel):
     url: str
 
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = "admin"
-    correct_password = "admin"
-    if credentials.username == correct_username and credentials.password == correct_password:
-        return credentials.username
-    else:
-        raise HTTPException(status_code=401, detail="Incorrect username or password")
-
 @app.post("/process_stream")
-def process_stream(request: StreamRequest, username: str = Depends(get_current_username)):
+def process_stream(request: StreamRequest):
     video_url = request.url
     if video_url not in camera_urls:
         raise HTTPException(status_code=404, detail="Camera URL not found")
