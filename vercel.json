@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
       {
-        "src": "real_time_detection/main.py",
+        "src": "main.py",
         "use": "@vercel/python"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "real_time_detection/main.py"
+        "dest": "main.py"
       }
     ]
   }
