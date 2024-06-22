@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 font-roboto">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-6">
+            <nav class="flex justify-between items-center py-4">
+                <h1 class="text-4xl font-bold text-blue-600">Camera Information</h1>
+                <ul class="flex space-x-4">
+                    <li><a href="/" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
+                    <li><a href="/camera_info_page" class="text-lg text-gray-600 hover:text-blue-600">Camera Info</a></li>
+                    <li><a href="/saved_frames_page" class="text-lg text-gray-600 hover:text-blue-600">Saved Frames</a></li>
+                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div id="camera-info" class="mt-8">
+                <h2 class="text-2xl font-semibold mb-2">Camera Information</h2>
+                <div id="camera-info-content" class="p-4 bg-white rounded-lg shadow-md">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b border-gray-200">Timestamp</th>
+                                <th class="py-2 px-4 border-b border-gray-200">Camera ID</th>
+                                <th class="py-2 px-4 border-b border-gray-200">Frame Path</th>
+                            </tr>
+                        </thead>
+                        <tbody id="camera-info-table">
+                            <!-- Camera info will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <footer class="mt-8 text-center text-gray-500">
+            &copy; 2024 Real-Time Dust Detection. All rights reserved.
+        </footer>
+    </div>
+    <script>
+        function loadCameraInfo() {
+            fetch('/camera_info', {
+                headers: {
+                    'Authorization': 'Basic ' + btoa('admin:admin')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const cameraInfoTable = document.getElementById('camera-info-table');
+                cameraInfoTable.innerHTML = '';
+                data.camera_info.forEach(info => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b border-gray-200">${info.timestamp}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${info.camera_id}</td>
+                        <td class="py-2 px-4 border-b border-gray-200">${info.file_path}</td>
+                    `;
+                    cameraInfoTable.appendChild(row);
+                });
+            });
+        }
+
+        // Load camera info on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCameraInfo();
+        });
+    </script>
+</body>
+</html>

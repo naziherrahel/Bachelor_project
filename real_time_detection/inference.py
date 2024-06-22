@@ -6,10 +6,11 @@ import json
 import os
 from datetime import datetime, timedelta
 from utils import is_dust_cloud, play_sound
-from database import insert_detection, insert_frame
-from websocket_utils import send_frame_to_websockets, send_audio_alert_to_websockets
 import asyncio
+
 base_dir = 'c:/Users/Администратор/Desktop/dust_detection_project/'
+saved_frames_dir = os.path.join(base_dir, "saved_frames")
+sound_file_path = os.path.join(base_dir, "sound_alert.wav")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -69,22 +70,27 @@ def process_camera_stream(video_path, stream_id):
                     cv2.putText(annotated_frame, f"Dust Cloud ID: {track_id}", (top_left_x, top_left_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                     cv2.rectangle(annotated_frame, (top_left_x, top_left_y), (bottom_right_x, bottom_right_y), (0, 0, 255), 2)
                     frame_timestamp = datetime.now()
-                    frame_file_path = f"{base_dir}saved_frames/frame_{frame_count}.jpg"
+                    frame_file_path = os.path.join(saved_frames_dir, f"frame_{frame_count}.jpg")
                     cv2.imwrite(frame_file_path, annotated_frame)
-                    sound_file_path = os.path.join(base_dir, "sound_alert.wav")
-                    
-                    # Debounce audio alerts
-                    if datetime.now() - last_audio_alert_time > audio_alert_debounce_interval:
-                        last_audio_alert_time = datetime.now()
-                        play_sound(sound_file_path)
-                        asyncio.run(send_audio_alert_to_websockets(sound_file_path, stream_id))  # Send audio alert to WebSocket clients
+                    if os.path.exists(frame_file_path):
+                        logging.info(f"Frame saved: {frame_file_path}")
+                    else:
+                        logging.error(f"Failed to save frame: {frame_file_path}")
 
-                    frame_id = insert_frame(frame_file_path)
+                    from database import insert_frame, insert_detection
+                    frame_id = insert_frame(frame_file_path.replace("\\", "/"))
                     insert_detection(timestamp=frame_timestamp, camera_id='camera_1', frame_id=frame_id)
 
-            frame_to_write = annotated_frame if dust_cloud_detected else frame
-            out.write(frame_to_write)
-            asyncio.run(send_frame_to_websockets(frame_to_write, stream_id))  # Send frame to WebSocket clients
+                    if datetime.now() - last_audio_alert_time > audio_alert_debounce_interval:
+                        last_audio_alert_time = datetime.now()
+                        from websocket_utils import send_audio_alert_to_websockets
+                        asyncio.run(send_audio_alert_to_websockets(sound_file_path, stream_id))
+
+            # Always send the current frame to the UI
+            from websocket_utils import send_frame_to_websockets
+            asyncio.run(send_frame_to_websockets(frame, stream_id, dust_cloud_detected, annotated_frame if dust_cloud_detected else None))
+
+            out.write(frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

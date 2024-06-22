@@ -1,86 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Dust Detection</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body class="bg-gray-100 text-gray-800 font-roboto">
-    <div class="container mx-auto px-4 py-8">
-        <header class="mb-6">
-            <nav class="flex justify-between items-center py-4">
-                <h1 class="text-4xl font-bold text-blue-600">Real-Time Dust Detection</h1>
-                <ul class="flex space-x-4">
-                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
-                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">About</a></li>
-                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <h2 class="text-2xl font-semibold mb-2">Stream 1</h2>
-                <div class="border border-gray-300 rounded-lg overflow-hidden">
-                    <img id="video-stream-1" src="" alt="Video Stream 1" class="w-full h-auto"/>
-                </div>
-                <div id="stream-1-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
-                    No alerts
-                </div>
-                <audio id="audio-alert-1" class="hidden"></audio>
-            </div>
-            <div>
-                <h2 class="text-2xl font-semibold mb-2">Stream 2</h2>
-                <div class="border border-gray-300 rounded-lg overflow-hidden">
-                    <img id="video-stream-2" src="" alt="Video Stream 2" class="w-full h-auto"/>
-                </div>
-                <div id="stream-2-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
-                    No alerts
-                </div>
-                <audio id="audio-alert-2" class="hidden"></audio>
-            </div>
-        </main>
-        <footer class="mt-8 text-center text-gray-500">
-            &copy; 2024 Real-Time Dust Detection. All rights reserved.
-        </footer>
-    </div>
-    <script>
-        const videoStream1 = document.getElementById('video-stream-1');
-        const videoStream2 = document.getElementById('video-stream-2');
-        const stream1Alerts = document.getElementById('stream-1-alerts');
-        const stream2Alerts = document.getElementById('stream-2-alerts');
-        const audioAlert1 = document.getElementById('audio-alert-1');
-        const audioAlert2 = document.getElementById('audio-alert-2');
-
-        const ws1 = new WebSocket('ws://127.0.0.1:8000/ws?stream=1');
-        const ws2 = new WebSocket('ws://127.0.0.1:8000/ws?stream=2');
-
-        ws1.onmessage = function(event) {
-            const message = JSON.parse(event.data);
-            if (message.type === "frame") {
-                videoStream1.src = 'data:image/jpeg;base64,' + message.data;
-                stream1Alerts.textContent = "Dust detected!";
-            } else if (message.type === "audio") {
-                audioAlert1.src = 'data:audio/wav;base64,' + message.data;
-                audioAlert1.play();
-            }
-        };
-
-        ws2.onmessage = function(event) {
-            const message = JSON.parse(event.data);
-            if (message.type === "frame") {
-                videoStream2.src = 'data:image/jpeg;base64,' + message.data;
-                stream2Alerts.textContent = "Dust detected!";
-            } else if (message.type === "audio") {
-                audioAlert2.src = 'data:audio/wav;base64,' + message.data;
-                audioAlert2.play();
-            }
-        };
-    </script>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,37 +14,20 @@
             <nav class="flex justify-between items-center py-4">
                 <h1 class="text-4xl font-bold text-blue-600">Real-Time Dust Detection</h1>
                 <ul class="flex space-x-4">
-                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
-                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">About</a></li>
+                    <li><a href="/" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
+                    <li><a href="/camera_info_page" class="text-lg text-gray-600 hover:text-blue-600">Camera Info</a></li>
+                    <li><a href="/saved_frames_page" class="text-lg text-gray-600 hover:text-blue-600">Saved Frames</a></li>
                     <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Contact</a></li>
                 </ul>
             </nav>
         </header>
         <main>
             <div class="mb-6">
-                <label for="video-url" class="block text-lg font-semibold mb-2">Enter Video Stream URL:</label>
-                <input id="video-url" type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="http://example.com/stream.mp4">
-                <button id="start-processing" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Start Processing</button>
+                <input type="text" id="camera-url" class="p-2 border border-gray-300 rounded" placeholder="Enter camera URL">
+                <button id="add-stream" class="p-2 bg-blue-600 text-white rounded">Add Stream</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h2 class="text-2xl font-semibold mb-2">Stream 1</h2>
-                    <div class="border border-gray-300 rounded-lg overflow-hidden">
-                        <img id="video-stream-1" src="" alt="Video Stream 1" class="w-full h-auto"/>
-                    </div>
-                    <div id="stream-1-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
-                        No alerts
-                    </div>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-semibold mb-2">Stream 2</h2>
-                    <div class="border border-gray-300 rounded-lg overflow-hidden">
-                        <img id="video-stream-2" src="" alt="Video Stream 2" class="w-full h-auto"/>
-                    </div>
-                    <div id="stream-2-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
-                        No alerts
-                    </div>
-                </div>
+            <div id="streams" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Streams will be added here dynamically -->
             </div>
         </main>
         <footer class="mt-8 text-center text-gray-500">
@@ -135,37 +35,68 @@
         </footer>
     </div>
     <script>
-        const startProcessingButton = document.getElementById('start-processing');
-        startProcessingButton.addEventListener('click', () => {
-            const videoUrl = document.getElementById('video-url').value;
+        document.getElementById('add-stream').addEventListener('click', function() {
+            const url = document.getElementById('camera-url').value;
             fetch('/process_stream', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa('admin:admin')
                 },
-                body: JSON.stringify({ url: videoUrl })
+                body: JSON.stringify({ url })
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data.message);
-                if (data.stream_id === 1) {
-                    const ws1 = new WebSocket(`ws://127.0.0.1:8000/ws?stream=${data.stream_id}`);
-                    ws1.onmessage = function(event) {
-                        const imageData = event.data;
-                        document.getElementById('video-stream-1').src = 'data:image/jpeg;base64,' + imageData;
-                        document.getElementById('stream-1-alerts').textContent = "Dust detected!";
-                    };
-                } else if (data.stream_id === 2) {
-                    const ws2 = new WebSocket(`ws://127.0.0.1:8000/ws?stream=${data.stream_id}`);
-                    ws2.onmessage = function(event) {
-                        const imageData = event.data;
-                        document.getElementById('video-stream-2').src = 'data:image/jpeg;base64,' + imageData;
-                        document.getElementById('stream-2-alerts').textContent = "Dust detected!";
-                    };
+                if (data.message) {
+                    const streamId = document.querySelectorAll('.stream').length + 1;
+                    addStream(streamId);
+                } else {
+                    alert('Failed to add stream');
                 }
-            })
-            .catch(error => console.error('Error:', error));
+            });
         });
+    
+        function addStream(streamId) {
+            const streamsContainer = document.getElementById('streams');
+            const streamDiv = document.createElement('div');
+            streamDiv.className = 'stream';
+            streamDiv.innerHTML = `
+                <h2 class="text-2xl font-semibold mb-2">Stream ${streamId}</h2>
+                <div class="border border-gray-300 rounded-lg overflow-hidden">
+                    <img id="video-stream-${streamId}" src="" alt="Video Stream ${streamId}" class="w-full h-auto"/>
+                </div>
+                <div id="stream-${streamId}-alerts" class="mt-4 p-4 bg-red-100 text-red-600 rounded-lg">
+                    No alerts
+                </div>
+                <audio id="audio-alert-${streamId}" class="hidden"></audio>
+            `;
+            streamsContainer.appendChild(streamDiv);
+    
+            const videoStream = document.getElementById(`video-stream-${streamId}`);
+            const streamAlerts = document.getElementById(`stream-${streamId}-alerts`);
+            const audioAlert = document.getElementById(`audio-alert-${streamId}`);
+    
+            const ws = new WebSocket(`ws://127.0.0.1:8000/ws?stream=${streamId}`);
+            ws.onopen = function() {
+                console.log("WebSocket connection established");
+                // Send authentication data immediately after opening the connection
+                const authData = JSON.stringify({ username: "admin", password: "admin" });
+                ws.send(authData);
+            };
+            ws.onmessage = function(event) {
+                const message = JSON.parse(event.data);
+                if (message.type === "frame") {
+                    videoStream.src = 'data:image/jpeg;base64,' + message.data;
+                } else if (message.type === "alert") {
+                    videoStream.src = 'data:image/jpeg;base64,' + message.data;
+                    streamAlerts.textContent = "Dust detected!";
+                } else if (message.type === "audio") {
+                    audioAlert.src = 'data:audio/wav;base64,' + message.data;
+                    audioAlert.play();
+                }
+            };
+        }
     </script>
+    
 </body>
 </html>

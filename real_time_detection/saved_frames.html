@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Frames</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 font-roboto">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-6">
+            <nav class="flex justify-between items-center py-4">
+                <h1 class="text-4xl font-bold text-blue-600">Saved Frames</h1>
+                <ul class="flex space-x-4">
+                    <li><a href="/" class="text-lg text-gray-600 hover:text-blue-600">Home</a></li>
+                    <li><a href="/camera_info_page" class="text-lg text-gray-600 hover:text-blue-600">Camera Info</a></li>
+                    <li><a href="/saved_frames_page" class="text-lg text-gray-600 hover:text-blue-600">Saved Frames</a></li>
+                    <li><a href="#" class="text-lg text-gray-600 hover:text-blue-600">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div id="saved-frames" class="mt-8">
+                <h2 class="text-2xl font-semibold mb-2">Saved Frames</h2>
+                <div id="saved-frames-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Saved frames will be loaded here -->
+                </div>
+            </div>
+        </main>
+        <footer class="mt-8 text-center text-gray-500">
+            &copy; 2024 Real-Time Dust Detection. All rights reserved.
+        </footer>
+    </div>
+    <script>
+        function loadSavedFrames() {
+            fetch('/saved_frames', {
+                headers: {
+                    'Authorization': 'Basic ' + btoa('admin:admin')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const savedFramesContent = document.getElementById('saved-frames-content');
+                savedFramesContent.innerHTML = '';
+                data.frames.forEach(frame => {
+                    const frameDiv = document.createElement('div');
+                    frameDiv.className = 'p-2 border border-gray-300 rounded-lg';
+                    frameDiv.innerHTML = `<img src="${frame.url}" alt="Saved Frame" class="w-full h-auto"/>`;
+                    savedFramesContent.appendChild(frameDiv);
+                });
+            });
+        }
+
+        // Load saved frames on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedFrames();
+        });
+    </script>
+</body>
+</html>
